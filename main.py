@@ -24,7 +24,7 @@ class Game:
             pygame.display.flip()
 
     def draw(self):
-        self.rendering_manager.draw_hex_map(self.hex_tile_map, self.screen)
+        self.rendering_manager.draw_hex_map(self.map_state_manager, self.hex_tile_map, self.screen)
 
 
 if __name__ == "__main__":
