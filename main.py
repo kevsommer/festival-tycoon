@@ -2,6 +2,7 @@ import pygame
 from core.HexTileMap import HexTileMap
 from state.MapStateManager import MapStateManager
 from graphics.RenderingManager import RenderingManager
+from assets.colors import COLORS
 
 class Game: 
     def __init__(self):
@@ -19,7 +20,7 @@ class Game:
                     self.running = False
                     pygame.quit()
         
-            self.screen.fill((0, 0, 0))
+            self.screen.fill(COLORS['black'])
             self.update()
             self.draw()
             pygame.display.flip()

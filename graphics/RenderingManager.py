@@ -1,5 +1,5 @@
 import pygame
-
+from assets.colors import COLORS
 class RenderingManager:
     def draw_hex_map(self, map_state_manager, hex_tile_map, screen):
         for tile_state in map_state_manager.tile_states:
@@ -12,12 +12,12 @@ class RenderingManager:
 
     def get_terrain_color(self, terrain):
         if terrain == 'water':
-            return (0, 0, 255)
+            return COLORS['blue']
         elif terrain == 'grass':
-            return (0, 255, 0)
+            return COLORS['green']
         elif terrain == 'mountain':
-            return (128, 128, 128)
-        return (0, 0, 0)
+            return COLORS['gray']
+        return COLORS['black']
     
     def draw_hex_tile(self, hex_tile, screen, terrain):
         color = self.get_terrain_color(terrain)
@@ -25,4 +25,4 @@ class RenderingManager:
         pygame.draw.polygon(screen, color, hex_tile.points)
 
     def draw_selected_tile(self, hex_tile, screen):
-        pygame.draw.polygon(screen, (255, 0, 0), hex_tile.points, width=5)
+        pygame.draw.polygon(screen, COLORS['red'], hex_tile.points, width=5)
