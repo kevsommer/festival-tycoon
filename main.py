@@ -1,5 +1,7 @@
 import pygame
 from core.HexTileMap import HexTileMap
+from state.MapStateManager import MapStateManager
+from graphics.RenderingManager import RenderingManager
 
 class Game: 
     def __init__(self):
@@ -7,7 +9,8 @@ class Game:
         self.screen = pygame.display.set_mode((1920, 1080))
         self.running = True
         self.hex_tile_map = HexTileMap()
-
+        self.map_state_manager = MapStateManager(self.hex_tile_map)
+        self.rendering_manager = RenderingManager()
 
     def run(self):
         while self.running:
@@ -21,7 +24,8 @@ class Game:
             pygame.display.flip()
 
     def draw(self):
-        self.hex_tile_map.draw(self.screen)
+        self.rendering_manager.draw_hex_map(self.hex_tile_map, self.screen)
+
 
 if __name__ == "__main__":
     game = Game()
