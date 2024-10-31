@@ -1,4 +1,4 @@
-from .TileState import TileState
+from .TileState import TileState, TileId
 
 class MapStateManager:
     def __init__(self, hex_tile_map):
@@ -9,5 +9,5 @@ class MapStateManager:
             tile_id = (axial_coord.q, axial_coord.r)
             self.tile_states[tile_id] = TileState(tile_id)
 
-    def handle_tile_click(self, tile_id):
+    def handle_tile_click(self, tile_id: TileId):
         self.selected_tile = tile_id
