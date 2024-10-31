@@ -2,8 +2,8 @@ import pygame
 from assets.colors import COLORS
 class RenderingManager:
     def draw_hex_map(self, map_state_manager, hex_tile_map, screen):
-        for tile_state in map_state_manager.tile_states:
-            hex_tile = hex_tile_map.get_hex_tile(tile_state.id)
+        for (tile_id, tile_state) in map_state_manager.tile_states.items():
+            hex_tile = hex_tile_map.get_hex_tile(tile_id)
             self.draw_hex_tile(hex_tile, screen, terrain=tile_state.terrain)
             
         if map_state_manager.selected_tile is not None:
