@@ -2,6 +2,7 @@ import pygame
 from core.HexTileMap import HexTileMap
 from state.MapStateManager import MapStateManager
 from graphics.RenderingManager import RenderingManager
+from graphics.ViewportTransformer import ViewportTransformer
 from assets.colors import COLORS
 
 class Game: 
@@ -12,6 +13,7 @@ class Game:
         self.hex_tile_map = HexTileMap()
         self.map_state_manager = MapStateManager(self.hex_tile_map)
         self.rendering_manager = RenderingManager()
+        self.viewport_transformer = ViewportTransformer()
 
     def run(self):
         while self.running:
@@ -19,6 +21,11 @@ class Game:
                 if event.type == pygame.QUIT:
                     self.running = False
                     pygame.quit()
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_UP:
+                        self.viewport_transformer.zoom_in()
+                    if event.key == pygame.K_DOWN:
+                        self.viewport_transformer.zoom_out()
         
             self.screen.fill(COLORS['black'])
             self.update()
@@ -26,7 +33,7 @@ class Game:
             pygame.display.flip()
 
     def draw(self):
-        self.rendering_manager.draw_hex_map(self.map_state_manager, self.hex_tile_map, self.screen)
+        self.rendering_manager.draw_hex_map(self.map_state_manager, self.hex_tile_map, self.viewport_transformer, self.screen)
 
     def update(self):
         self.handle_mouse_click()
