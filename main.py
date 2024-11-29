@@ -43,7 +43,7 @@ class Game:
             elif action[0] == 'move':
                 self.viewport_transformer.move(action[1][0], action[1][1])
             elif action[0] == 'click':
-                mouse_pos: tuple[int, int] = action[1]
+                mouse_pos: tuple[float, float] = action[1]
                 axial_mouse_pos = AxialHexCoord.pixel_to_hex(
                     self.viewport_transformer.transform_to_world_coords(mouse_pos)
                 )

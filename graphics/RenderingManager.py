@@ -1,30 +1,57 @@
 import pygame
 from assets.colors import COLORS
-class RenderingManager:
-    def draw_hex_map(self, map_state_manager, hex_tile_map, viewport_transformer, screen):
-        for (tile_id, tile_state) in map_state_manager.tile_states.items():
-            hex_tile = hex_tile_map.get_hex_tile(tile_id)
-            self.draw_hex_tile(hex_tile, screen, terrain=tile_state.terrain, viewport_transformer=viewport_transformer)
-            
-        if map_state_manager.selected_tile is not None:
-            selected_hex_tile = hex_tile_map.get_hex_tile(map_state_manager.selected_tile)
-            self.draw_selected_tile(selected_hex_tile, screen, viewport_transformer)
+from core.HexTile import HexTile
+from core.HexTileMap import HexTileMap
+from state.TileState import TileState, TileId
+from graphics.ViewportTransformer import ViewportTransformer
+from state.MapStateManager import MapStateManager
 
-    def get_terrain_color(self, terrain):
-        if terrain == 'water':
+type Tile = tuple[TileId, TileState]
+
+class RenderingManager:
+    def draw_hex_map(self, 
+                     map_state_manager: MapStateManager,
+                     hex_tile_map: HexTileMap,
+                     viewport_transformer: ViewportTransformer, 
+                     screen: pygame.Surface):
+        
+        for tile in map_state_manager.tile_states.items():
+            selected = True if map_state_manager.selected_tile == tile[0] else False
+            self.draw_tile(tile, hex_tile_map, viewport_transformer, screen, selected)
+        
+        selected_tile_id = map_state_manager.selected_tile
+        if selected_tile_id is not None:
+            selected_tile = map_state_manager.tile_states[map_state_manager.selected_tile]
+            
+            self.draw_tile((selected_tile_id, selected_tile), hex_tile_map, viewport_transformer, screen, selected=True)
+    
+    def get_color(self, tile_state: TileState):
+        if tile_state.__class__.__name__ == 'StageTile':
+            return COLORS['yellow']
+        
+        if tile_state.terrain == 'water':
             return COLORS['blue']
-        elif terrain == 'grass':
+        elif tile_state.terrain == 'grass':
             return COLORS['green']
-        elif terrain == 'mountain':
+        elif tile_state.terrain == 'mountain':
             return COLORS['gray']
         return COLORS['black']
     
-    def draw_hex_tile(self, hex_tile, screen, terrain, viewport_transformer):
-        color = self.get_terrain_color(terrain)
+    def draw_tile(self, 
+                  tile: Tile, 
+                  hex_tile_map: HexTileMap, 
+                  viewport_transformer: ViewportTransformer, 
+                  screen: pygame.Surface, selected: bool):
+        
+        tile_id, tile_state = tile
+        
+        hex_tile = hex_tile_map.get_hex_tile(tile_id)
+        color = self.get_color(tile_state)
+        hex_tile_points = list(map(viewport_transformer.transform_to_screen_coords, hex_tile.points))
 
-        hex_tile_points = [viewport_transformer.transform_to_screen_coords(point) for point in hex_tile.points]
         pygame.draw.polygon(screen, color, hex_tile_points)
-
-    def draw_selected_tile(self, hex_tile, screen, viewport_transformer):
-        hex_tile_points = [viewport_transformer.transform_to_screen_coords(point) for point in hex_tile.points]
-        pygame.draw.polygon(screen, COLORS['red'], hex_tile_points, width=5)
+        
+        if selected: 
+            width = round(viewport_transformer.zoom * 5)
+            pygame.draw.polygon(screen, COLORS['red'], hex_tile_points, width=width)
+        
