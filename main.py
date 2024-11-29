@@ -5,6 +5,7 @@ from core.HexTileMap import HexTileMap
 from graphics.RenderingManager import RenderingManager
 from graphics.ViewportTransformer import ViewportTransformer
 from state.MapStateManager import MapStateManager
+from core.AxialHexCoord import AxialHexCoord
 
 class Game: 
     def __init__(self):
@@ -43,10 +44,11 @@ class Game:
                 self.viewport_transformer.move(action[1][0], action[1][1])
             elif action[0] == 'click':
                 mouse_pos: tuple[int, int] = action[1]
-                for (tile_id, tile) in self.hex_tile_map.hex_tiles.items():
-                    mouse_x, mouse_y = self.viewport_transformer.transform_to_world_coords(mouse_pos[0], mouse_pos[1])
-                    if tile.check_if_inside_hexagon(mouse_x, mouse_y):
-                        self.map_state_manager.handle_tile_click(tile_id)
+                axial_mouse_pos = AxialHexCoord.pixel_to_hex(
+                    self.viewport_transformer.transform_to_world_coords(mouse_pos)
+                )
+
+                self.map_state_manager.handle_tile_click(axial_mouse_pos)
 
     def draw(self):
         self.rendering_manager.draw_hex_map(self.map_state_manager, self.hex_tile_map, self.viewport_transformer, self.screen)

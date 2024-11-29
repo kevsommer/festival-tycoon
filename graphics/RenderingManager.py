@@ -22,9 +22,9 @@ class RenderingManager:
     def draw_hex_tile(self, hex_tile, screen, terrain, viewport_transformer):
         color = self.get_terrain_color(terrain)
 
-        hex_tile_points = [viewport_transformer.transform_to_screen_coords(x, y) for (x, y) in hex_tile.points]
+        hex_tile_points = [viewport_transformer.transform_to_screen_coords(point) for point in hex_tile.points]
         pygame.draw.polygon(screen, color, hex_tile_points)
 
     def draw_selected_tile(self, hex_tile, screen, viewport_transformer):
-        hex_tile_points = [viewport_transformer.transform_to_screen_coords(x, y) for (x, y) in hex_tile.points]
+        hex_tile_points = [viewport_transformer.transform_to_screen_coords(point) for point in hex_tile.points]
         pygame.draw.polygon(screen, COLORS['red'], hex_tile_points, width=5)

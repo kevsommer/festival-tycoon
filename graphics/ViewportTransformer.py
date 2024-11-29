@@ -21,9 +21,14 @@ class ViewportTransformer:
         self.translate_x += dx
         self.translate_y += dy
 
-    def transform_to_screen_coords(self, x, y):
-        
-        return round(x * self.zoom + WINDOW_OFFSET_X + self.translate_x), round(y * self.zoom + WINDOW_OFFSET_Y + self.translate_y)
+    def transform_to_screen_coords(self, point: tuple[float, float]) -> tuple[int, int]:
+        x, y = point
+        screen_x = round(x * self.zoom + WINDOW_OFFSET_X + self.translate_x)
+        screen_y = round(y * self.zoom + WINDOW_OFFSET_Y + self.translate_y)
+        return screen_x, screen_y
     
-    def transform_to_world_coords(self, x, y):
-        return round((x - self.translate_x - WINDOW_OFFSET_X) / self.zoom), round((y - self.translate_y - WINDOW_OFFSET_Y) / self.zoom)
+    def transform_to_world_coords(self, point: tuple[float, float]) -> tuple[int, int]:
+        x, y = point
+        world_x = round((x - WINDOW_OFFSET_X - self.translate_x) / self.zoom)
+        world_y = round((y - WINDOW_OFFSET_Y - self.translate_y) / self.zoom)
+        return world_x, world_y

@@ -18,17 +18,3 @@ class HexTile:
         corner_y = round(self.y + size * math.sin(angle_rad), 2)
 
         return (corner_x, corner_y)
-
-    def check_if_inside_hexagon(self, x, y):
-        self.hovered = False
-
-        x -= self.x
-        y -= self.y
-
-        q = (math.sqrt(3)/3 * x - 1/3 * y) / self.radius
-        r = 2/3 * y / self.radius
-
-        return self.is_inside_hexagon_qr(q, r)
-    
-    def is_inside_hexagon_qr(self, q, r):
-        return -0.5 < q < 0.5 and -0.5 < r < 0.5 and -q - r < 0.5

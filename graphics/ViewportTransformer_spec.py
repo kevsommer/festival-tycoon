@@ -25,12 +25,12 @@ class TestViewportTransformer:
 
     def test_transform_to_screen_coords(self, viewport_transformer):
         viewport_transformer.move(10, 20)
-        assert viewport_transformer.transform_to_screen_coords(50, 32) == (1020, 592)
+        assert viewport_transformer.transform_to_screen_coords((50, 32)) == (1020, 592)
         viewport_transformer.zoom_in()
-        assert viewport_transformer.transform_to_screen_coords(50, 32) == (1025, 595)
+        assert viewport_transformer.transform_to_screen_coords((50, 32)) == (1025, 595)
 
     def test_transform_to_world_coords(self, viewport_transformer):
         viewport_transformer.move(10, 20)
-        assert viewport_transformer.transform_to_world_coords(1020, 592) == (50, 32)
+        assert viewport_transformer.transform_to_world_coords((1020, 592)) == (50, 32)
         viewport_transformer.zoom_in()
-        assert viewport_transformer.transform_to_world_coords(1025, 595) == (50, 32)
+        assert viewport_transformer.transform_to_world_coords((1025, 595)) == (50, 32)
