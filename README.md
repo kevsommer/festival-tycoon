@@ -28,3 +28,9 @@ pip install -r requirements.txt
 ```
 
 You are now ready to run the game!
+
+## Tests
+
+```bash
+ptw -- **/*_spec.py
+```
