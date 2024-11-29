@@ -1,9 +1,10 @@
 import pygame
+from assets.colors import COLORS
+from core.EventHandler import EventHandler
 from core.HexTileMap import HexTileMap
-from state.MapStateManager import MapStateManager
 from graphics.RenderingManager import RenderingManager
 from graphics.ViewportTransformer import ViewportTransformer
-from assets.colors import COLORS
+from state.MapStateManager import MapStateManager
 
 class Game: 
     def __init__(self):
@@ -14,59 +15,41 @@ class Game:
         self.map_state_manager = MapStateManager(self.hex_tile_map)
         self.rendering_manager = RenderingManager()
         self.viewport_transformer = ViewportTransformer()
-        self.dragging = False
+        self.event_handler = EventHandler()
 
     def run(self):
         while self.running:
+            actions = []
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.running = False
                     pygame.quit()
 
-                self.handle_zoom(event)
-                self.handle_mouse(event)
+                actions = self.event_handler.handle_event(event)
+
 
             self.screen.fill(COLORS['black'])
-            self.update()
+            self.update(actions)
             self.draw()
             pygame.display.flip()
 
-    def handle_zoom(self, event): 
-        if event.type == pygame.MOUSEWHEEL:
-            if event.y < 0: 
+    def update(self, actions: tuple[str, tuple[int, int] | None]):
+        for action in actions:
+            if action[0] == 'zoom_out':
                 self.viewport_transformer.zoom_out()
-            else:
+            elif action[0] == 'zoom_in':
                 self.viewport_transformer.zoom_in()
-
-    def handle_mouse(self, event):
-        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 and not self.dragging:
-            self.dragging = True
-            self.drag_start_pos = pygame.mouse.get_pos()
-
-        if event.type == pygame.MOUSEBUTTONUP and self.dragging and event.button == 1: # Left mouse button
-            self.dragging = False
-
-        if event.type == pygame.MOUSEMOTION and self.dragging   :
-            mouse_x, mouse_y = pygame.mouse.get_pos()
-            dx = mouse_x - self.drag_start_pos[0]
-            dy = mouse_y - self.drag_start_pos[1]
-            self.viewport_transformer.move(dx, dy)
-            self.drag_start_pos = (mouse_x, mouse_y)
+            elif action[0] == 'move':
+                self.viewport_transformer.move(action[1][0], action[1][1])
+            elif action[0] == 'click':
+                mouse_pos: tuple[int, int] = action[1]
+                for (tile_id, tile) in self.hex_tile_map.hex_tiles.items():
+                    mouse_x, mouse_y = self.viewport_transformer.transform_to_world_coords(mouse_pos[0], mouse_pos[1])
+                    if tile.check_if_inside_hexagon(mouse_x, mouse_y):
+                        self.map_state_manager.handle_tile_click(tile_id)
 
     def draw(self):
         self.rendering_manager.draw_hex_map(self.map_state_manager, self.hex_tile_map, self.viewport_transformer, self.screen)
-
-    def update(self):
-        self.handle_mouse_click()
-
-    def handle_mouse_click(self):
-        mouse_pos = pygame.mouse.get_pos()
-        if pygame.mouse.get_pressed()[0]:
-
-            for (tile_id, tile) in self.hex_tile_map.hex_tiles.items():
-                mouse_x, mouse_y = self.viewport_transformer.transform_to_world_coords(mouse_pos[0], mouse_pos[1])
-                if tile.check_if_inside_hexagon(mouse_x, mouse_y):
-                    self.map_state_manager.handle_tile_click(tile_id)
 
 if __name__ == "__main__":
     game = Game()
