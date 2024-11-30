@@ -2,7 +2,7 @@ import pygame
 from assets.colors import COLORS
 from core.EventHandler import EventHandler
 from graphics.RenderingManager import RenderingManager
-from graphics.ViewportTransformer import ViewportTransformer
+from graphics.Camera import Camera
 from state.MapStateManager import MapStateManager
 from core.AxialHexCoord import AxialHexCoord
 
@@ -13,7 +13,7 @@ class Game:
         self.running = True
         self.map_state_manager = MapStateManager()
         self.rendering_manager = RenderingManager()
-        self.viewport_transformer = ViewportTransformer()
+        self.camera = Camera()
         self.event_handler = EventHandler()
 
     def run(self):
@@ -35,21 +35,21 @@ class Game:
     def update(self, actions: tuple[str, tuple[int, int] | None]):
         for action in actions:
             if action[0] == 'zoom_out':
-                self.viewport_transformer.zoom_out()
+                self.camera.zoom_out()
             elif action[0] == 'zoom_in':
-                self.viewport_transformer.zoom_in()
+                self.camera.zoom_in()
             elif action[0] == 'move':
-                self.viewport_transformer.move(action[1][0], action[1][1])
+                self.camera.move(action[1][0], action[1][1])
             elif action[0] == 'click':
                 mouse_pos: tuple[float, float] = action[1]
                 axial_mouse_pos = AxialHexCoord.pixel_to_hex(
-                    self.viewport_transformer.transform_to_world_coords(mouse_pos)
+                    self.camera.transform_to_world_coords(mouse_pos)
                 )
 
                 self.map_state_manager.handle_tile_click(axial_mouse_pos)
 
     def draw(self):
-        self.rendering_manager.draw_hex_map(self.map_state_manager, self.viewport_transformer, self.screen)
+        self.rendering_manager.draw_hex_map(self.map_state_manager, self.camera, self.screen)
 
 if __name__ == "__main__":
     game = Game()

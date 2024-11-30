@@ -4,7 +4,7 @@ MIN_ZOOM = 0.5
 WINDOW_OFFSET_X = 960
 WINDOW_OFFSET_Y = 540
 
-class ViewportTransformer:
+class Camera:
     def __init__(self):
         self.zoom = 1
         self.zoom_factor = 0.1
