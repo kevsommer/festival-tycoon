@@ -1,7 +1,6 @@
 import pygame
 from assets.colors import COLORS
 from core.EventHandler import EventHandler
-from core.HexTileMap import HexTileMap
 from graphics.RenderingManager import RenderingManager
 from graphics.ViewportTransformer import ViewportTransformer
 from state.MapStateManager import MapStateManager
@@ -12,8 +11,7 @@ class Game:
         pygame.init()
         self.screen = pygame.display.set_mode((1920, 1080))
         self.running = True
-        self.hex_tile_map = HexTileMap()
-        self.map_state_manager = MapStateManager(self.hex_tile_map)
+        self.map_state_manager = MapStateManager()
         self.rendering_manager = RenderingManager()
         self.viewport_transformer = ViewportTransformer()
         self.event_handler = EventHandler()
@@ -51,7 +49,7 @@ class Game:
                 self.map_state_manager.handle_tile_click(axial_mouse_pos)
 
     def draw(self):
-        self.rendering_manager.draw_hex_map(self.map_state_manager, self.hex_tile_map, self.viewport_transformer, self.screen)
+        self.rendering_manager.draw_hex_map(self.map_state_manager, self.viewport_transformer, self.screen)
 
 if __name__ == "__main__":
     game = Game()

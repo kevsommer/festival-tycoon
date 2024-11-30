@@ -1,12 +1,13 @@
 import math
+from .AxialHexCoord import AxialHexCoord
 
 RADIUS = 50
 
 class HexTile:
-    def __init__(self, x, y):
+    def __init__(self, coord: AxialHexCoord):
         self.radius = RADIUS
-        self.x = x
-        self.y = y
+        self.x = coord.x
+        self.y = coord.y
         self.points = list(map(lambda i: self.pointy_hex_corner(self.radius, i), range(0, 6)))
         self.lines = zip(self.points[:-1], self.points[1:])
 

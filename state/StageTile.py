@@ -1,8 +1,8 @@
 from .TileState import TileState
 
 class StageTile(TileState):
-    def __init__(self, id):
-        super().__init__(id)
+    def __init__(self, id, coord):
+        super().__init__(id, coord)
         self.level = 1
     
     def __str__(self):
