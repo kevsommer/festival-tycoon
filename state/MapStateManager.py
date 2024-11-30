@@ -1,4 +1,4 @@
-from .TileState import TileState, TileId
+from .Tile import Tile, TileId
 from .StageTile import StageTile
 from core.AxialHexCoord import AxialHexCoord
 
@@ -11,29 +11,29 @@ def gen_hex_axials(N: int) -> list[AxialHexCoord]:
     
     return list(map(lambda axial: AxialHexCoord(axial[0], axial[1]), hex_axials))
 
-def initialise_tile_states() -> dict[TileId, TileState]:
+def initialise_tiles() -> dict[TileId, Tile]:
     hex_axials = gen_hex_axials(6)
     
-    tile_states: dict[TileId, TileState] = {}
+    tiles: dict[TileId, Tile] = {}
     
     for coord in hex_axials:
         tile_id = (coord.q, coord.r)
         if tile_id == (0, 0):
-            tile_states[tile_id] = StageTile(tile_id, coord)
+            tiles[tile_id] = StageTile(tile_id, coord)
         else:
-            tile_states[tile_id] = TileState(tile_id, coord)
+            tiles[tile_id] = Tile(tile_id, coord)
     
-    return tile_states
+    return tiles
 
 class MapStateManager:
     def __init__(self):
-        self.tile_states = initialise_tile_states()
+        self.tiles = initialise_tiles()
         self.selected_tile = None
         
     def handle_tile_click(self, tile_id: TileId):
         self.selected_tile = tile_id
 
     def get_hex_tile(self, tile_id):
-        if tile_id in self.tile_states.keys():
-            return self.tile_states[tile_id].hex_tile
+        if tile_id in self.tiles.keys():
+            return self.tiles[tile_id].hex_tile
         return None

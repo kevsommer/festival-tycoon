@@ -1,6 +1,6 @@
-from .TileState import TileState
+from .Tile import Tile
 
-class StageTile(TileState):
+class StageTile(Tile):
     def __init__(self, id, coord):
         super().__init__(id, coord)
         self.level = 1
