@@ -2,6 +2,7 @@ import random
 import pygame
 from core.HexTile import HexTile
 from core.AxialHexCoord import AxialHexCoord
+from graphics.Camera import Camera
 from assets.colors import COLORS
 
 type TileId = tuple[int, int]
@@ -17,9 +18,25 @@ class Tile():
         self.level = 0
         self.hex_tile = HexTile(coord)
         self.terrain = random.choice(["grass", "water", "mountain"])
+        self.color = self.get_color()
         
     def __str__(self):
         return f"TileState(id={self.id}, level={self.level}, terrain={self.terrain})"
 
-    def draw(self, screen):
-        pygame.draw.polygon(screen, COLORS['yellow'], self.hex_tile.points)
+    def draw(self, screen: pygame.Surface, camera: Camera, selected: bool = False):
+        points = list(map(camera.transform_to_screen_coords, self.hex_tile.points))
+        pygame.draw.polygon(screen, self.color, points)
+        
+        if selected:
+            width = round(camera.zoom * 5)
+            pygame.draw.polygon(screen, COLORS['red'], points, width=width)
+
+    def get_color(self) -> tuple[int, int, int]:    
+        if self.terrain == 'water':
+            return COLORS['blue']
+        elif self.terrain == 'grass':
+            return COLORS['green']
+        elif self.terrain == 'mountain':
+            return COLORS['gray']
+        
+        return COLORS['black']
