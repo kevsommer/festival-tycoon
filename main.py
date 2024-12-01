@@ -5,11 +5,12 @@ from graphics.RenderingManager import RenderingManager
 from graphics.Camera import Camera
 from state.MapStateManager import MapStateManager
 from core.AxialHexCoord import AxialHexCoord
+from assets.constants import SCREEN_WIDTH, SCREEN_HEIGHT
 
 class Game: 
     def __init__(self):
         pygame.init()
-        self.screen = pygame.display.set_mode((1920, 1080))
+        self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
         self.running = True
         self.map_state_manager = MapStateManager()
         self.rendering_manager = RenderingManager()
