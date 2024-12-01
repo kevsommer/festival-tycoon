@@ -50,6 +50,7 @@ class Game:
 
     def draw(self):
         self.rendering_manager.draw_hex_map(self.map_state_manager, self.camera, self.screen)
+        self.rendering_manager.draw_hud(self.screen, self.map_state_manager)
 
 if __name__ == "__main__":
     game = Game()

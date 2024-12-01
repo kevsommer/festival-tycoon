@@ -19,6 +19,7 @@ class Tile():
         self.hex_tile = HexTile(coord)
         self.terrain = random.choice(["grass", "water", "mountain"])
         self.color = self.get_color()
+        self.text = ""
         
     def __str__(self):
         return f"TileState(id={self.id}, level={self.level}, terrain={self.terrain})"
@@ -30,6 +31,13 @@ class Tile():
         if selected:
             width = round(camera.zoom * 5)
             pygame.draw.polygon(screen, COLORS['red'], points, width=width)
+            
+        fontSize = round(camera.zoom * 16)
+        font = pygame.font.Font(None, fontSize)
+        text = font.render(self.text, True, COLORS['black'])
+        screen_point = camera.transform_to_screen_coords((self.x - 25, self.y))
+        screen.blit(text, screen_point)
+    
 
     def get_color(self) -> tuple[int, int, int]:    
         if self.terrain == 'water':

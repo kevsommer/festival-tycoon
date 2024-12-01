@@ -31,7 +31,10 @@ class MapStateManager:
         self.selected_tile = None
         
     def handle_tile_click(self, tile_id: TileId):
-        self.selected_tile = tile_id
+        if tile_id in self.tiles.keys():
+            self.selected_tile = tile_id
+        else:
+            self.selected_tile = None
 
     def get_hex_tile(self, tile_id):
         if tile_id in self.tiles.keys():

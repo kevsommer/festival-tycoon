@@ -6,6 +6,7 @@ class StageTile(Tile):
         super().__init__(id, coord)
         self.level = 1
         self.color = COLORS['yellow']
+        self.text = f"StageTile {self.level}"
 
     def __str__(self):
         return f"StageTile(id={self.id}, level={self.level}, terrain={self.terrain})"
