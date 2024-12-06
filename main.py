@@ -46,9 +46,20 @@ class Game:
                 axial_mouse_pos = AxialHexCoord.pixel_to_hex(
                     self.camera.transform_to_world_coords(mouse_pos)
                 )
+                
+                button_action = self.rendering_manager.check_button_clicks(mouse_pos)
+                
+                if button_action is not None:
+                    self.handle_button_actions(button_action)
+                else:
+                    self.map_state_manager.handle_tile_click(axial_mouse_pos)
 
-                self.map_state_manager.handle_tile_click(axial_mouse_pos)
-
+    def handle_button_actions(self, action: str):
+        if action == 'button':
+            print("Button clicked")
+        elif action == 'add_tile':
+            print("Add Tile clicked")
+            
     def draw(self):
         self.rendering_manager.draw_hex_map(self.map_state_manager, self.camera, self.screen)
         self.rendering_manager.draw_hud(self.screen, self.map_state_manager)
